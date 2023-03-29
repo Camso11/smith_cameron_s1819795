@@ -1,4 +1,5 @@
 package org.me.gcu.smith_cameron_s1819795;
+//TEST
 
 /*  Starter project for Mobile Platform Development in Semester B Session 2018/2019
     You should use this project as the starting point for your assignment.
