@@ -10,14 +10,23 @@ public class earthquakeInfo {
     private String geoLong;
 
     //constructor method
+    public earthquakeInfo() {
+    title = "";
+    description = "";
+    link = "";
+    pubDate = "";
+    category = "";
+    geoLat = "";
+    geoLong = "";
+    }
     public earthquakeInfo(String titleIn,String descriptionIn, String linkIn, String pubDateIn, String categoryIn, String geoLatIn, String geoLongIn) {
-    title = titleIn;
-    description = descriptionIn;
-    link = linkIn;
-    pubDate = pubDateIn;
-    category = categoryIn;
-    geoLat = geoLatIn;
-    geoLong = geoLongIn;
+        title = titleIn;
+        description = descriptionIn;
+        link = linkIn;
+        pubDate = pubDateIn;
+        category = categoryIn;
+        geoLat = geoLatIn;
+        geoLong = geoLongIn;
     }
     //Setter methods for the class
     public void setTitle(String newTitle){
