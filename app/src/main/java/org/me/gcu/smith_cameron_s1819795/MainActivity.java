@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
                             Log.d("UI thread", "I am the UI thread");
 
                             for (int i = 0; i < alist.size(); i++){
-                                rawDataDisplay.append(alist.get(i).toString() + "\n");
+                                rawDataDisplay.append(alist.get(i).toString() + "\n" + "\n");
                             }
                          //   rawDataDisplay.setText(result);
                         }
