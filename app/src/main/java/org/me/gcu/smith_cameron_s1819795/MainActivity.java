@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
     private String result;
     private String url1="";
     private String urlSource="http://quakes.bgs.ac.uk/feeds/MhSeismology.xml";
+    LinkedList<earthquakeInfo> alist = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
                 earthquakeInfo earthquake = null;
                 result = result.substring(4);
                 result = result.replaceAll("geo:", "");
-                LinkedList<earthquakeInfo> alist = null;
+              //  LinkedList<earthquakeInfo> alist = null;
                 try {
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     factory.setNamespaceAware(true);
@@ -213,8 +214,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
                             if (xpp.getName().equalsIgnoreCase("item"))
                             {
                              //   Log.e("MyTag","widget is " + earthquake.toString());
+                                Log.e("TEST", earthquake.toString());
                                 alist.add(earthquake);
-                                System.out.println(earthquake.toString());
+
                             }
                             //else
                            // if (xpp.getName().equalsIgnoreCase("channel"))
@@ -247,8 +249,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
+                            rawDataDisplay.setText("");
                             Log.d("UI thread", "I am the UI thread");
-                            rawDataDisplay.setText(result);
+
+                            for (int i = 0; i < alist.size(); i++){
+                                rawDataDisplay.append(alist.get(i).toString() + "\n");
+                            }
+                         //   rawDataDisplay.setText(result);
                         }
                     });
                 }
