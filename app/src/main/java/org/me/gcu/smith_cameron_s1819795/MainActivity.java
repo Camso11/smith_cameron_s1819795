@@ -21,7 +21,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,9 +44,10 @@ import java.util.LinkedList;
 
 //import gcu.mpd.bgsdatastarter.R;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
     private TextView rawDataDisplay;
+    private ListView descriptionDisplay;
     private Button startButton;
     private String result;
     private String url1="";
@@ -52,10 +57,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        ArrayAdapter adapter = new ArrayAdapter<earthquakeInfo>(this, R.layout.activity_listview, alist);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Set up the raw links to the graphical components
         rawDataDisplay = (TextView)findViewById(R.id.rawDataDisplay);
+        descriptionDisplay = (ListView) findViewById(R.id.list);
         startButton = (Button)findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
 
@@ -253,9 +261,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
                             Log.d("UI thread", "I am the UI thread");
 
                             for (int i = 0; i < alist.size(); i++){
-                                rawDataDisplay.append(alist.get(i).toString() + "\n" + "\n");
+                                rawDataDisplay.append(alist.get(i).getDescription() + "\n" + "\n");
                             }
-                         //   rawDataDisplay.setText(result);
+
+                            //   rawDataDisplay.setText(result);
                         }
                     });
                 }
