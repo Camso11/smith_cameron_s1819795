@@ -1,14 +1,55 @@
 <!--  MPD XML Starter code Semester B Session 2018 2019  -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="fill_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
         <TextView android:id="@+id/salutation" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="20sp" android:text="Welcome to Mobile Platform Development"/>
         <Button android:id="@+id/startButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Press to get data"/>
-        <TextView android:id="@+id/acknowledgement" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="20sp" android:text="Contains British Geological Survey materials ©NERC 2019"/>
-        <TextView android:id="@+id/rawDataDisplay" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="20sp" android:text="Raw Data is Displayed here"/>
-        <ListView android:id="@+id/list"
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="wrap_content"
+            android:layout_height="395dp"
             android:layout_centerHorizontal="true"
+            android:divider="#000000"
+            android:dividerHeight="2dp"></ListView>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
-        </ListView>
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button android:id="@+id/dateButton" android:layout_width="wrap_content"  android:layout_height="wrap_content" android:layout_marginEnd="2dp" android:text="Press to get data"/>
+            <Button android:id="@+id/strongButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp" android:text="Press to get data"/>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button android:id="@+id/detailedButton" android:layout_width="wrap_content"  android:layout_height="wrap_content" android:layout_marginEnd="2dp" android:text="Press to get data"/>
+            <Button android:id="@+id/nearestButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp" android:text="Press to get data"/>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button android:id="@+id/deepestButton" android:layout_width="wrap_content" android:layout_marginEnd="2dp" android:layout_height="wrap_content" android:text="Press to get data"/>
+            <Button android:id="@+id/shallowestButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp"  android:text="Press to get data"/>
+
+
+
+        </LinearLayout>
+
+
+        <TextView android:id="@+id/acknowledgement" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="20sp" android:text="Contains British Geological Survey materials ©NERC 2019"/>
+
+
+
     </LinearLayout>
 </ScrollView>

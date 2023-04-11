@@ -79,18 +79,16 @@ public class earthquakeInfo {
         return geoLong;
     }
 
+    public String detailedDescription()
+    {
+        return
+                "Title=" + title + "\n" + "Description=" + description + "\n" +"Link=" + link + "\n" +"Date=" + pubDate + "\n" +"Category=" + category + "\n" +"Latitude=" + geoLat + "\n" +"Longitude=" + geoLong ;
+    }
 
     @Override
     public java.lang.String toString() {
-        return "earthquakeInfo{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", link='" + link + '\'' +
-                ", pubDate='" + pubDate + '\'' +
-                ", category='" + category + '\'' +
-                ", geoLat='" + geoLat + '\'' +
-                ", geoLong='" + geoLong + '\'' +
-                '}';
+        return
+                "title=" + title;
     }
 }
 

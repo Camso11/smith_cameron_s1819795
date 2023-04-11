@@ -17,6 +17,7 @@ package org.me.gcu.smith_cameron_s1819795;
 
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -40,11 +42,12 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 //import gcu.mpd.bgsdatastarter.R;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener
 {
     private TextView rawDataDisplay;
     private ListView descriptionDisplay;
@@ -57,19 +60,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        ArrayAdapter adapter = new ArrayAdapter<earthquakeInfo>(this, R.layout.activity_listview, alist);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Set up the raw links to the graphical components
-        rawDataDisplay = (TextView)findViewById(R.id.rawDataDisplay);
         descriptionDisplay = (ListView) findViewById(R.id.list);
         startButton = (Button)findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
-
+        descriptionDisplay.setOnItemClickListener(this);
         // More Code goes here
     }
-
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("| Earthquake Info |").setMessage(alist.get(position).detailedDescription()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = alert.create();
+        dialog.show();
+    }
     public void onClick(View aview)
     {
         startProgress();
@@ -257,13 +267,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
-                            rawDataDisplay.setText("");
                             Log.d("UI thread", "I am the UI thread");
+                            ArrayAdapter adapter = new ArrayAdapter<earthquakeInfo>(MainActivity.this, R.layout.activity_listview, alist);
+                            descriptionDisplay.setAdapter(adapter);
 
-                            for (int i = 0; i < alist.size(); i++){
-                                rawDataDisplay.append(alist.get(i).getDescription() + "\n" + "\n");
-                            }
-
+                           // for (int i = 0; i < alist.size(); i++){
+                                //rawDataDisplay.append(alist.get(i).getDescription() + "\n" + "\n");
+                            //}
                             //   rawDataDisplay.setText(result);
                         }
                     });
