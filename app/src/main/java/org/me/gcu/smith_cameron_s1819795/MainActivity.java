@@ -52,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView rawDataDisplay;
     private ListView descriptionDisplay;
     private Button startButton;
+    private Button strongButton;
+    private Button deepestButton;
+    private Button shallowestButton;
+
+    private Button nearestButton;
     private String result;
     private String url1="";
     private String urlSource="http://quakes.bgs.ac.uk/feeds/MhSeismology.xml";
@@ -65,11 +70,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Set up the raw links to the graphical components
         descriptionDisplay = (ListView) findViewById(R.id.list);
         startButton = (Button)findViewById(R.id.startButton);
+        strongButton = (Button)findViewById(R.id.strongButton);
+        deepestButton = (Button)findViewById(R.id.deepestButton);
+        shallowestButton = (Button)findViewById(R.id.shallowestButton);
+        nearestButton = (Button)findViewById(R.id.nearestButton);
+        deepestButton.setOnClickListener(this);
+        nearestButton.setOnClickListener(this);
+        shallowestButton.setOnClickListener(this);
         startButton.setOnClickListener(this);
+        strongButton.setOnClickListener(this);
         descriptionDisplay.setOnItemClickListener(this);
         // More Code goes here
     }
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("| Earthquake Info |").setMessage(alist.get(position).detailedDescription()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -82,7 +96,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void onClick(View aview)
     {
-        startProgress();
+        if (aview == startButton) {
+            startProgress();
+        }
+        else
+        if (aview == strongButton) {
+           strongest();
+        }
+        else
+        if (aview == deepestButton) {
+            deepest();
+        }
+        else
+        if (aview == shallowestButton) {
+            shallowest();
+        }
+        else
+        if (aview == nearestButton) {
+            shallowest();
+        }
     }
 
     public void startProgress()
@@ -90,7 +122,137 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Run network access on a separate thread;
         new Thread(new Task(urlSource)).start();
     } //
+    public void strongest()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+            Double strongest = 1.1;
+            int strongestI = 0;
+           String tempStr = "";
+           String tempStr2 = "";
+           Double tempDbl = 1.1;
+           for (int i = 0; i < alist.size(); i++){
+               tempStr = alist.get(i).getMagnitude();
+               String[] split = tempStr.split(":");
+               tempStr2 = split[1];
+               tempDbl =  Double.parseDouble(tempStr2);
+               if (tempDbl > strongest)
+               {
+                   strongest = tempDbl;
+                   strongestI = i;
+               }
+            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Strongest Earthquake |").setMessage(alist.get(strongestI).detailedDescription() + "\n" + alist.get(strongestI).getMagnitude()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+    }
 
+    public void deepest()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+            int deepest = 0;
+            int deepI = 0;
+            String tempStr = "";
+            String tempStr2 = "";
+            int tempInt = 0;
+            for (int i = 0; i < alist.size(); i++){
+                tempStr = alist.get(i).getDepth();
+                String[] split = tempStr.split(":");
+                tempStr2 = split[1];
+                tempStr2 = tempStr2.replaceAll("[km]","");
+                tempStr2 = tempStr2.replaceAll("\\s","");
+
+                tempInt =  Integer.parseInt(tempStr2);
+                if (tempInt > deepest)
+                {
+                    deepest = tempInt;
+                    deepI = i;
+                }
+            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Deepest Earthquake |").setMessage(alist.get(deepI).detailedDescription() + "\n" + alist.get(deepI).getDepth()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+    }
+
+    public void shallowest()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+            int shallowest = 999;
+            int shallowI = 0;
+            String tempStr = "";
+            String tempStr2 = "";
+            int tempInt = 0;
+            for (int i = 0; i < alist.size(); i++){
+                tempStr = alist.get(i).getDepth();
+                String[] split = tempStr.split(":");
+                tempStr2 = split[1];
+                tempStr2 = tempStr2.replaceAll("[km]","");
+                tempStr2 = tempStr2.replaceAll("\\s","");
+
+                tempInt =  Integer.parseInt(tempStr2);
+                if (tempInt < shallowest)
+                {
+                    shallowest = tempInt;
+                    shallowI = i;
+                }
+            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Deepest Earthquake |").setMessage(alist.get(shallowI).detailedDescription() + "\n" + alist.get(shallowI).getDepth()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+    }
     // Need separate thread to access the internet resource over network
     // Other neater solutions should be adopted in later iterations.
     private class Task implements Runnable {
@@ -102,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void run() {
-
             URL aurl;
             URLConnection yc;
             BufferedReader in = null;
@@ -268,6 +429,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
                             Log.d("UI thread", "I am the UI thread");
+
                             ArrayAdapter adapter = new ArrayAdapter<earthquakeInfo>(MainActivity.this, R.layout.activity_listview, alist);
                             descriptionDisplay.setAdapter(adapter);
 

@@ -9,6 +9,9 @@ public class earthquakeInfo {
     private String geoLat;
     private String geoLong;
 
+    private String depth;
+
+    private String magnitude;
     //constructor method
     public earthquakeInfo() {
     title = "";
@@ -18,22 +21,28 @@ public class earthquakeInfo {
     category = "";
     geoLat = "";
     geoLong = "";
+    depth = "";
+    magnitude = "";
     }
-    public earthquakeInfo(String titleIn,String descriptionIn, String linkIn, String pubDateIn, String categoryIn, String geoLatIn, String geoLongIn) {
-        title = titleIn;
-        description = descriptionIn;
-        link = linkIn;
-        pubDate = pubDateIn;
-        category = categoryIn;
-        geoLat = geoLatIn;
-        geoLong = geoLongIn;
-    }
+   // public earthquakeInfo(String titleIn,String descriptionIn, String linkIn, String pubDateIn, String categoryIn, String geoLatIn, String geoLongIn) {
+     //   title = titleIn;
+       // description = descriptionIn;
+        //link = linkIn;
+        //pubDate = pubDateIn;
+       // category = categoryIn;
+        //geoLat = geoLatIn;
+        //geoLong = geoLongIn;
+    //}
     //Setter methods for the class
     public void setTitle(String newTitle){
         title = newTitle;
     }
     public void setDescription(String newDescription){
+
         description = newDescription;
+        String[] split = description.split(";");
+        depth = split[3];
+        magnitude = split[4];
     }
     public void setLink(String newLink){
         link = newLink;
@@ -78,6 +87,10 @@ public class earthquakeInfo {
     public String getGeoLong() {
         return geoLong;
     }
+
+    public String getDepth() {return depth;}
+
+    public String getMagnitude() {return magnitude;}
 
     public String detailedDescription()
     {
