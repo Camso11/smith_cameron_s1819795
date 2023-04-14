@@ -17,14 +17,17 @@ package org.me.gcu.smith_cameron_s1819795;
 
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.app.AppCompatActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,8 +45,12 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 
 //import gcu.mpd.bgsdatastarter.R;
 
@@ -55,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button strongButton;
     private Button deepestButton;
     private Button shallowestButton;
-
+    private Button dateButton;
     private Button nearestButton;
     private String result;
     private String url1="";
@@ -74,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deepestButton = (Button)findViewById(R.id.deepestButton);
         shallowestButton = (Button)findViewById(R.id.shallowestButton);
         nearestButton = (Button)findViewById(R.id.nearestButton);
+        dateButton = (Button)findViewById(R.id.dateButton);
+        dateButton.setOnClickListener(this);
         deepestButton.setOnClickListener(this);
         nearestButton.setOnClickListener(this);
         shallowestButton.setOnClickListener(this);
@@ -114,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else
         if (aview == nearestButton) {
             shallowest();
+        }
+        else
+        if (aview == dateButton) {
+            date();
         }
     }
 
@@ -183,22 +196,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String tempStr = "";
             String tempStr2 = "";
             int tempInt = 0;
+            String output = "";
             for (int i = 0; i < alist.size(); i++){
                 tempStr = alist.get(i).getDepth();
                 String[] split = tempStr.split(":");
                 tempStr2 = split[1];
                 tempStr2 = tempStr2.replaceAll("[km]","");
                 tempStr2 = tempStr2.replaceAll("\\s","");
-
                 tempInt =  Integer.parseInt(tempStr2);
                 if (tempInt > deepest)
                 {
                     deepest = tempInt;
                     deepI = i;
+                    output = "Earthquake " + alist.get(deepI).getDepth() + "\n" +"\n" + alist.get(deepI).detailedDescription();
                 }
+                else
+                    if (tempInt == deepest){
+                        deepI = i;
+                        output = output + "Earthquake " + alist.get(deepI).getDepth() + "\n" +"\n" + alist.get(deepI).detailedDescription();
+
+                    }
             }
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("| Deepest Earthquake |").setMessage(alist.get(deepI).detailedDescription() + "\n" + alist.get(deepI).getDepth()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            alert.setTitle("| Deepest Earthquake |").setMessage(output).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -253,6 +273,121 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialog.show();
         }
     }
+    public void date()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+
+            AlertDialog.Builder search = new AlertDialog.Builder(this);
+            search.setTitle("Please enter the range of dates you want to search between");
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.date_search, null);
+            search.setView(view);
+            EditText date1 = view.findViewById(R.id.date1);
+
+            search.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String q1 = date1.getText().toString();
+                   // String q2 = date2.getText().toString();
+                    Date d1 = parseIn(q1);
+                 //   Date d2 = parseIn(q2);
+                    if (d1 == null ){
+                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                        alert.setTitle("| Error |").setMessage("Please enter the date in the correct format.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog a2 = alert.create();
+                        a2.show();
+
+                    }
+                    else {
+                        String output = "";
+                        Boolean found = false;
+                        for (int i = 0; i < alist.size(); i++) {
+                        if (d1.equals(alist.get(i).getFormattedDate()))
+                        {
+                            output = output + "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                            found = true;
+                        }
+
+                        }
+                        if (found == false) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                            alert.setTitle("| Error |").setMessage("No earthquakes" + alist.get(2).getFormattedDate()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog a2 = alert.create();
+                            a2.show();
+                        }
+                        else
+                        if (found == true) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                            alert.setTitle("Results").setMessage(output).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog a2 = alert.create();
+                            a2.show();
+                        }
+                        }
+
+                }
+            });
+            search.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = search.create();
+            dialog.show();
+        }
+    }
+    private Date parseIn(String input){
+        SimpleDateFormat o = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
+        try {
+            Date temp = o.parse(input);
+            return temp;
+        }catch (ParseException e){
+            return null;
+        }
+
+    }
+
+    private boolean dateCheck (Date input, Date input2, Date search) {
+       // return input.compareTo(search) * search.compareTo(input2) >= 0;
+        //return search.after(input) && search.before(input2);
+        if ( search.equals(input) ||
+                search.equals(input2) ||
+                (search.after(input) && search.before(input2) )){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     // Need separate thread to access the internet resource over network
     // Other neater solutions should be adopted in later iterations.
     private class Task implements Runnable {

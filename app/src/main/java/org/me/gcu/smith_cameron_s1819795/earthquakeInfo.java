@@ -1,5 +1,10 @@
 package org.me.gcu.smith_cameron_s1819795;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class earthquakeInfo {
     private String title;
     private String description;
@@ -8,10 +13,10 @@ public class earthquakeInfo {
     private String category;
     private String geoLat;
     private String geoLong;
-
     private String depth;
-
     private String magnitude;
+    private String formattedDate;
+    private Date parseDate;
     //constructor method
     public earthquakeInfo() {
     title = "";
@@ -23,6 +28,8 @@ public class earthquakeInfo {
     geoLong = "";
     depth = "";
     magnitude = "";
+    parseDate = null;
+    formattedDate = "";
     }
    // public earthquakeInfo(String titleIn,String descriptionIn, String linkIn, String pubDateIn, String categoryIn, String geoLatIn, String geoLongIn) {
      //   title = titleIn;
@@ -49,6 +56,16 @@ public class earthquakeInfo {
     }
     public void setPubDate(String newPubDate){
         pubDate = newPubDate;
+        SimpleDateFormat i = new SimpleDateFormat("EEE, dd MM yyyy HH:mm:ss", Locale.UK);
+        SimpleDateFormat o = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
+        try {
+            Date temp = i.parse(pubDate);
+            formattedDate = o.format(temp);
+            parseDate = o.parse(formattedDate);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
     }
     public void setCategory(String newCategory){
         category = newCategory;
@@ -76,6 +93,8 @@ public class earthquakeInfo {
         return pubDate;
     }
 
+    public Date getParseDate() {return parseDate;}
+
     public String getCategory() {
         return category;
     }
@@ -91,6 +110,8 @@ public class earthquakeInfo {
     public String getDepth() {return depth;}
 
     public String getMagnitude() {return magnitude;}
+
+    public String getFormattedDate() {return formattedDate;}
 
     public String detailedDescription()
     {
