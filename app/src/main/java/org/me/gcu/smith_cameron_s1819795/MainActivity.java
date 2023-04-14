@@ -32,6 +32,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button shallowestButton;
     private Button dateButton;
     private Button nearestButton;
+    private Button detailedButton;
     private String result;
     private String url1="";
     private String urlSource="http://quakes.bgs.ac.uk/feeds/MhSeismology.xml";
@@ -74,14 +76,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar ab1 = getSupportActionBar();
+        ab1.hide();
         // Set up the raw links to the graphical components
         descriptionDisplay = (ListView) findViewById(R.id.list);
         startButton = (Button)findViewById(R.id.startButton);
+        detailedButton = (Button)findViewById(R.id.detailedButton);
         strongButton = (Button)findViewById(R.id.strongButton);
         deepestButton = (Button)findViewById(R.id.deepestButton);
         shallowestButton = (Button)findViewById(R.id.shallowestButton);
         nearestButton = (Button)findViewById(R.id.nearestButton);
         dateButton = (Button)findViewById(R.id.dateButton);
+        detailedButton.setOnClickListener(this);
         dateButton.setOnClickListener(this);
         deepestButton.setOnClickListener(this);
         nearestButton.setOnClickListener(this);
@@ -122,12 +128,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else
         if (aview == nearestButton) {
-            shallowest();
+            directional();
         }
         else
         if (aview == dateButton) {
             date();
         }
+        else
+            if (aview == detailedButton){
+
+                detailed();
+            }
     }
 
     public void startProgress()
@@ -176,7 +187,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialog.show();
         }
     }
+    public void directional()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+            double gLat = 55.86515;
+            double gLong = -4.25763;
+            double northern = 90;
+            int northI = 0;
+            double southern = -90;
+            int southI = 0;
+            double eastern = 180;
+            int eastI = 0;
+            double western = -180;
+            int westI = 0;
+            String message = "";
+            String tempStr2 = "";
+            double tempLat = 0;
+            double tempLong = 0;
 
+            for (int i = 0; i < alist.size(); i++){
+                tempLat = Double.parseDouble(alist.get(i).getGeoLat());
+                tempLong = Double.parseDouble(alist.get(i).getGeoLong());
+
+                //finds nearest northern quake
+                if(tempLat > gLat && tempLat <= northern) {
+                    northI = i;
+                    northern = tempLat;
+                }
+                //finds nearest southern quake
+                if(tempLat < gLat && tempLat >= southern) {
+                        southI = i;
+                        southern = tempLat;
+
+                }
+                //finds nearest eastern quake
+                if(tempLong > gLong && tempLong <= eastern) {
+                    eastI = i;
+                    eastern = tempLong;
+                    }
+                //finds nearest western quake
+                if(tempLong < gLong && tempLong >= western) {
+                    westI = i;
+                    western = tempLong;
+
+                    }
+            }
+            message = "Closest Earthquake to the North:\n" + alist.get(northI).detailedDescription() + "\n \n" + "Closest Earthquake to the East:\n" + alist.get(eastI).detailedDescription() + "\n \n" +"Closest Earthquake to the South:\n" + alist.get(southI).detailedDescription() + "\n \n" + "Closest Earthquake to the West:\n" + alist.get(westI).detailedDescription();
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Nearest Earthquakes to Glasgow |").setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+    }
     public void deepest()
     {
         if (alist == null) {
@@ -243,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialog.show();
         }
         else {
+            String output = "";
             int shallowest = 999;
             int shallowI = 0;
             String tempStr = "";
@@ -260,6 +339,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     shallowest = tempInt;
                     shallowI = i;
+                    output = "Earthquake " + alist.get(shallowI).getDepth() + "\n" +"\n" + alist.get(shallowI).detailedDescription();
+                }  else
+                if (tempInt == shallowest){
+                    shallowI = i;
+                    output = output + "Earthquake " + alist.get(shallowI).getDepth() + "\n" +"\n" + alist.get(shallowI).detailedDescription();
+
                 }
             }
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -289,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
 
             AlertDialog.Builder search = new AlertDialog.Builder(this);
-            search.setTitle("Please enter the range of dates you want to search between");
+            search.setTitle("Please enter the date you want to search for:");
             LayoutInflater inflater = getLayoutInflater();
             View view = inflater.inflate(R.layout.date_search, null);
             search.setView(view);
@@ -349,6 +434,95 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             a2.show();
                         }
                         }
+
+                }
+            });
+            search.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = search.create();
+            dialog.show();
+        }
+    }
+    public void detailed()
+    {
+        if (alist == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("| Error |").setMessage("Please download the data before searching").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+        else {
+
+            AlertDialog.Builder search = new AlertDialog.Builder(this);
+            search.setTitle("Please enter your search information");
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.detailed_search, null);
+            search.setView(view);
+            EditText date1 = view.findViewById(R.id.date1);
+            EditText info = view.findViewById(R.id.info);
+            search.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String q1 = date1.getText().toString();
+                     String q2 = info.getText().toString();
+                    Date d1 = parseIn(q1);
+                    if (d1 == null){
+                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                        alert.setTitle("| Error |").setMessage("Please enter the date in the correct format.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog a2 = alert.create();
+                        a2.show();
+
+                    }
+                    else {
+                        String output = "";
+                        Boolean found = false;
+                        for (int i = 0; i < alist.size(); i++) {
+                            if (q1.equals(alist.get(i).getFormattedDate()) && alist.get(i).detailedDescription().contains(q2))
+                            {
+                                output = output + "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                                found = true;
+                            }
+
+                        }
+                        if (found == false) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                            alert.setTitle("| Error |").setMessage("No earthquakes found on date " + q1).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog a2 = alert.create();
+                            a2.show();
+                        }
+                        else
+                        if (found == true) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                            alert.setTitle("Results").setMessage(output).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog a2 = alert.create();
+                            a2.show();
+                        }
+                    }
 
                 }
             });
