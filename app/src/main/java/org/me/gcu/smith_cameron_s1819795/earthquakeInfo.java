@@ -56,7 +56,7 @@ public class earthquakeInfo {
     }
     public void setPubDate(String newPubDate){
         pubDate = newPubDate;
-        SimpleDateFormat i = new SimpleDateFormat("EEE, dd MM yyyy HH:mm:ss", Locale.UK);
+        SimpleDateFormat i = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.UK);
         SimpleDateFormat o = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
         try {
             Date temp = i.parse(pubDate);

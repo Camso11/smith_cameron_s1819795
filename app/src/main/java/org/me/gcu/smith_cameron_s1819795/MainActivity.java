@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String output = "";
                         Boolean found = false;
                         for (int i = 0; i < alist.size(); i++) {
-                        if (d1.equals(alist.get(i).getFormattedDate()))
+                        if (q1.equals(alist.get(i).getFormattedDate()))
                         {
                             output = output + "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
                             found = true;
@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         if (found == false) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                            alert.setTitle("| Error |").setMessage("No earthquakes" + alist.get(2).getFormattedDate()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            alert.setTitle("| Error |").setMessage("No earthquakes found on date " + q1).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
