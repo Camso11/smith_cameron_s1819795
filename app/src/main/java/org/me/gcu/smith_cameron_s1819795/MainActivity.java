@@ -19,7 +19,11 @@ package org.me.gcu.smith_cameron_s1819795;
 //import android.support.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -401,11 +405,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     else {
                         String output = "";
+                        SpannableStringBuilder builder = new SpannableStringBuilder();
                         Boolean found = false;
+                        String tempStr = "";
+                        String tempStr2 = "";
+                        double tempDbl = 0.0;
                         for (int i = 0; i < alist.size(); i++) {
+                            tempStr = alist.get(i).getMagnitude();
+                            String[] split = tempStr.split(":");
+                            tempStr2 = split[1];
+                            tempDbl =  Double.parseDouble(tempStr2);
                         if (q1.equals(alist.get(i).getFormattedDate()))
                         {
-                            output = output + "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                            if (tempDbl <= 2.5){
+                                output = "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                                SpannableString weakQuake= new SpannableString(output);
+                                weakQuake.setSpan(new BackgroundColorSpan(Color.GREEN), 0, output.length(), 0);
+                                builder.append(weakQuake);
+
+                            } else if (tempDbl > 2.5 && tempDbl <= 4.0) {
+                                output = "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                                SpannableString midQuake= new SpannableString(output);
+                                midQuake.setSpan(new BackgroundColorSpan(Color.YELLOW), 0, output.length(), 0);
+                                builder.append(midQuake);
+
+                            } else if (tempDbl > 4.0) {
+                                output = "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
+                                SpannableString StrongQuake= new SpannableString(output);
+                                StrongQuake.setSpan(new BackgroundColorSpan(Color.RED), 0, output.length(), 0);
+                                builder.append(StrongQuake);
+                            }
+                         //   output = output + "Earthquake on date " + alist.get(i).getFormattedDate() + "\n" +  alist.get(i).detailedDescription() + "\n" + "\n";
                             found = true;
                         }
 
@@ -424,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         else
                         if (found == true) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                            alert.setTitle("Results").setMessage(output).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            alert.setTitle("Results").setMessage(builder).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
