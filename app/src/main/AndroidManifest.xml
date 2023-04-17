@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.me.gcu.smith_cameron_s1819795">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"

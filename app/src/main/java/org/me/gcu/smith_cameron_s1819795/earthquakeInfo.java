@@ -1,5 +1,9 @@
 package org.me.gcu.smith_cameron_s1819795;
-
+//
+// Name                 Cameron Smith
+// Student ID           s1819795
+// Programme of Study   Computing
+//
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,15 +35,7 @@ public class earthquakeInfo {
     parseDate = null;
     formattedDate = "";
     }
-   // public earthquakeInfo(String titleIn,String descriptionIn, String linkIn, String pubDateIn, String categoryIn, String geoLatIn, String geoLongIn) {
-     //   title = titleIn;
-       // description = descriptionIn;
-        //link = linkIn;
-        //pubDate = pubDateIn;
-       // category = categoryIn;
-        //geoLat = geoLatIn;
-        //geoLong = geoLongIn;
-    //}
+
     //Setter methods for the class
     public void setTitle(String newTitle){
         title = newTitle;
@@ -113,12 +109,13 @@ public class earthquakeInfo {
 
     public String getFormattedDate() {return formattedDate;}
 
+    //detailed string output method
     public String detailedDescription()
     {
         return
                 "Title=" + title + "\n" + "Description=" + description + "\n" +"Link=" + link + "\n" +"Date=" + pubDate + "\n" +"Category=" + category + "\n" +"Latitude=" + geoLat + "\n" +"Longitude=" + geoLong ;
     }
-
+//toString method (only outputs title)
     @Override
     public java.lang.String toString() {
         return
